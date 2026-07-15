@@ -567,8 +567,7 @@ function loadData(mag) {
     passages: Array.from({length:N_PASSAGES},()=>({date:'',restant:{},ajoute:{}}))
   };
 }
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyS-SjRfcY0slnaq-AGo82ChNTRzRoCfxq9z3LAWG8LB-9TXitx4n34AAd8BTI1pfzX/exec";
-
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNxTbPMmC2JquPYh26I_fH_gKf63npSxbdmuaB8Vkbuvbgu0eaBv076KQEFSlzz-WI/exec";
 async function sendToGoogleSheets(data) {
     try {
 
@@ -590,13 +589,30 @@ async function sendToGoogleSheets(data) {
     }
 }
 function saveData() {
+
   const k = key(currentMag);
   const d = collectData();
+
   localStorage.setItem(k, JSON.stringify(d));
-  sendToGoogleSheets(d);
-  const el = document.getElementById('save-ok');
-  el.style.display = 'inline';
-  setTimeout(()=>el.style.display='none', 2500);
+
+ async function sendToGoogleSheets(data) {
+    try {
+
+        const response = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const text = await response.text();
+        console.log("Réponse Apps Script :", text);
+
+    } catch (err) {
+        console.error("Erreur Google Sheets :", err);
+        alert(err);
+    }
 }
 
 function collectData() {
