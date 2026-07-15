@@ -594,24 +594,37 @@ function saveData() {
 
   localStorage.setItem(k, JSON.stringify(d));
 
- async function sendToGoogleSheets(data) {
-    try {
+  sendToGoogleSheets({
+    magasin: currentMag,
+    data: d
+  });
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+  const el = document.getElementById('save-ok');
+  el.style.display = 'inline';
+  setTimeout(() => el.style.display = 'none', 2500);
+}
 
-        const text = await response.text();
-        console.log("Réponse Apps Script :", text);
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNxTbPMmC2JquPYh26I_fH_gKf63npSxbdmuaB8Vkbuvbgu0eaBv076KQEFSlzz-WI/exec";
 
-    } catch (err) {
-        console.error("Erreur Google Sheets :", err);
-        alert(err);
-    }
+async function sendToGoogleSheets(data) {
+  try {
+
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const text = await response.text();
+    console.log("Réponse Apps Script :", text);
+
+  } catch (err) {
+
+    console.error("Erreur Google Sheets :", err);
+
+  }
 }
 
 function collectData() {
