@@ -567,64 +567,14 @@ function loadData(mag) {
     passages: Array.from({length:N_PASSAGES},()=>({date:'',restant:{},ajoute:{}}))
   };
 }
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNxTbPMmC2JquPYh26I_fH_gKf63npSxbdmuaB8Vkbuvbgu0eaBv076KQEFSlzz-WI/exec";
-async function sendToGoogleSheets(data) {
-    try {
 
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
-
-        console.log("Synchronisation Google Sheets OK");
-
-    } catch (err) {
-
-        console.error("Erreur Google Sheets :", err);
-
-    }
-}
 function saveData() {
-
   const k = key(currentMag);
   const d = collectData();
-
   localStorage.setItem(k, JSON.stringify(d));
-
-  sendToGoogleSheets({
-    magasin: currentMag,
-    data: d
-  });
-
   const el = document.getElementById('save-ok');
   el.style.display = 'inline';
-  setTimeout(() => el.style.display = 'none', 2500);
-}
-
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNxTbPMmC2JquPYh26I_fH_gKf63npSxbdmuaB8Vkbuvbgu0eaBv076KQEFSlzz-WI/exec";
-
-async function sendToGoogleSheets(data) {
-  try {
-
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-
-    const text = await response.text();
-    console.log("Réponse Apps Script :", text);
-
-  } catch (err) {
-
-    console.error("Erreur Google Sheets :", err);
-
-  }
+  setTimeout(()=>el.style.display='none', 2500);
 }
 
 function collectData() {
